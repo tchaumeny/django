@@ -36,6 +36,10 @@ class Migration(object):
     # are not applied.
     replaces = []
 
+    # We want migrations to be atomic by default.
+    # This will have no effect on backends with can_rollback_ddl = False
+    atomic = True
+
     # Error class which is raised when a migration is irreversible
     class IrreversibleError(RuntimeError):
         pass
@@ -98,8 +102,9 @@ class Migration(object):
             new_state = project_state.clone()
             operation.state_forwards(self.app_label, new_state)
             # Run the operation
-            if not schema_editor.connection.features.can_rollback_ddl and operation.atomic:
-                # We're forcing a transaction on a non-transactional-DDL backend
+            if not schema_editor.use_atomic and operation.atomic:
+                # We're forcing a transaction for this operation because atomic wrapping
+                # is deactivated in the schema editor (for instance, if backend does not allow DDL rollback)
                 with atomic(schema_editor.connection.alias):
                     operation.database_forwards(self.app_label, schema_editor, project_state, new_state)
             else:
