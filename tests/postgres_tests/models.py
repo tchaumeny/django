@@ -20,3 +20,11 @@ class DateTimeArrayModel(models.Model):
 
 class NestedIntegerArrayModel(models.Model):
     field = ArrayField(ArrayField(models.IntegerField()))
+
+
+class CharFieldModel(models.Model):
+    field = models.CharField(max_length=16)
+
+
+class TextFieldModel(models.Model):
+    field = models.TextField()
