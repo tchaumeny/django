@@ -81,10 +81,8 @@ class ModelBackend(object):
         """
         if not user_obj.is_active:
             return False
-        for perm in self.get_all_permissions(user_obj):
-            if perm[:perm.index('.')] == app_label:
-                return True
-        return False
+        return any(perm[:perm.index('.')] == app_label
+                   for perm in self.get_all_permissions(user_obj))
 
     def get_user(self, user_id):
         UserModel = get_user_model()

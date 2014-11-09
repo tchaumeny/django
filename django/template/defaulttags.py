@@ -377,10 +377,8 @@ class RegroupNode(Node):
 
 def include_is_allowed(filepath):
     filepath = os.path.abspath(filepath)
-    for root in settings.ALLOWED_INCLUDE_ROOTS:
-        if filepath.startswith(root):
-            return True
-    return False
+    return any(filepath.startswith(root)
+               for root in settings.ALLOWED_INCLUDE_ROOTS)
 
 
 class SsiNode(Node):

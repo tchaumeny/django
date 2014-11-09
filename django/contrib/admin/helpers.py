@@ -305,10 +305,8 @@ class InlineAdminForm(AdminForm):
             return True
         # Also search any parents for an auto field. (The pk info is propagated to child
         # models so that does not need to be checked in parents.)
-        for parent in self.form._meta.model._meta.get_parent_list():
-            if parent._meta.has_auto_field:
-                return True
-        return False
+        return any(parent._meta.has_auto_field
+                   for parent in self.form._meta.model._meta.get_parent_list())
 
     def field_count(self):
         # tabular.html uses this function for colspan value.

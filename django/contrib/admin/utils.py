@@ -56,8 +56,7 @@ def quote(s):
     if not isinstance(s, six.string_types):
         return s
     res = list(s)
-    for i in range(len(res)):
-        c = res[i]
+    for i, c in enumerate(res):
         if c in """:/_#?;@&=+$,"[]<>%\\""":
             res[i] = '_%02X' % ord(c)
     return ''.join(res)
